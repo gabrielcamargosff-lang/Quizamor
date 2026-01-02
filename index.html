@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Quiz de Amor ❤️</title>
+    <style>
+        /* Estilos Visuais */
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #ffdae0; 
+            background-image: radial-gradient(#ffb7c5 1px, transparent 1px);
+            background-size: 20px 20px;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+        }
+
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            text-align: center; 
+            width: 85%; 
+            max-width: 400px; 
+            position: relative;
+            z-index: 10;
+        }
+
+        h2 { color: #d63384; margin-bottom: 20px; font-size: 1.3rem; line-height: 1.4; }
+        
+        input { 
+            width: 90%; 
+            padding: 12px; 
+            margin: 15px 0; 
+            border: 2px solid #ffb7c5; 
+            border-radius: 10px; 
+            outline: none;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        button { 
+            background-color: #d63384; 
+            color: white; 
+            border: none; 
+            padding: 12px 25px; 
+            border-radius: 50px; 
+            font-weight: bold;
+            cursor: pointer; 
+            width: 100%;
+        }
+
+        #mensagem { margin-top: 15px; font-size: 0.9rem; font-weight: bold; min-height: 20px; }
+
+        .heart {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 20px;
+            user-select: none;
+            animation: float 5s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card" id="quiz-container">
+    <div style="font-size: 40px; margin-bottom: 10px;">❤️</div>
+    <h2 id="pergunta">Carregando perguntas...</h2>
+    <input type="text" id="resposta" placeholder="Sua resposta...">
+    <button onclick="verificarResposta()">Próxima Pergunta</button>
+    <div id="mensagem"></div>
+</div>
+
+<script>
+    // Configurações do Quiz
+    const perguntas = [
+        { q: "Em que dia a gente se conheceu? Responda no formato dd/mm", a: "26/07" },
+        { q: "Qual minha comida favorita?", a: "strogonoff de frango" },
+        { q: "Em qual país tenho vontade de visitar? Ja comentei com você sobre", a: "japão" },
+        { q: "Quais são os nomes dos nossos filhos se forem um casal? Ex: Joao e Maria", a: "leonardo e gaia" },
+        { q: "Qual foi o primeiro presente que eu te dei?", a: "chocolate" },
+        { q: "Qual nome da minha doença dos olhos?", a: "ceratocone" },
+        { q: "Qual meu maior sonho como homem?", a: "pai" }
+    ];
+
+    let indiceAtual = 0;
+
+    // Função para exibir a pergunta atual
+    function carregarPergunta() {
+        const h2 = document.getElementById('pergunta');
+        const input = document.getElementById('resposta');
+        const msg = document.getElementById('mensagem');
+
+        if (indiceAtual < perguntas.length) {
+            h2.innerText = perguntas[indiceAtual].q;
+            input.value = "";
+            msg.innerText = "";
+        } else {
+            // Tela Final
+            document.getElementById('quiz-container').innerHTML = 
+                "<div style='font-size: 60px;'>🥰</div>" +
+                "<h2>Você acertou tudo, meu amor!</h2>" +
+                "<p>Obrigado por prestar atenção em cada detalhe nosso. Te amo! ❤️</p>";
+        }
+    }
+
+    // Função para validar a resposta
+    function verificarResposta() {
+        const input = document.getElementById('resposta');
+        const msg = document.getElementById('mensagem');
+        const respostaUsuario = input.value.toLowerCase().trim();
+        
+        let estaCorreto = false;
+
+        // Regra especial para a pergunta do "Pai" (índice 6)
+        if (indiceAtual === 6) {
+            if (respostaUsuario.includes("pai")) {
+                estaCorreto = true;
+            }
+        } else {
+            // Regra normal para as outras
+            if (respostaUsuario === perguntas[indiceAtual].a.toLowerCase()) {
+                estaCorreto = true;
+            }
+        }
+
+        if (estaCorreto) {
+            indiceAtual++;
+            carregarPergunta();
+        } else {
+            msg.innerText = "Resposta errada, amor! Tenta de novo... 🥺";
+            msg.style.color = "#ff4d6d";
+        }
+    }
+
+    // Gerador de corações flutuantes
+    function criarCoracao() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+    }
+
+    // Inicialização
+    window.onload = function() {
+        carregarPergunta();
+        setInterval(criarCoracao, 1000);
+    };
+</script>
+
+</body>
+</html>
